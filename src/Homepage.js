@@ -27,9 +27,6 @@ class MangaGenreRow extends React.Component{
             <h2 width = 'min-content' className='mangah2'>
                 {this.props.genre}
             </h2>
-            <h4>
-                <Link to = {link}>View All</Link>
-            </h4>
             </div>
             <div className='rowC'>
             {
