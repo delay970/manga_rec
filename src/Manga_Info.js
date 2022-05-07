@@ -20,9 +20,15 @@ class Manga_Info extends React.Component{
                 theme: null,
                 demographic: null,
                 pictureLink: null,
-                other: 'N/A'
+                other: 'N/A',
+                interested: false,
+                notinterested: false,
+                dislike: false,
+                neutral: false,
+                like: false,
             };
             const id = this.props.params.id;
+            const user = this.props.user;
             fetch(`http://localhost:3001/api/manga/${id}`)
             .then((res) => res.json())
             .then((res) => {
@@ -40,11 +46,127 @@ class Manga_Info extends React.Component{
                     genre: res[0].genre,
                     theme: res[0].theme,
                     demographic: res[0].demographic,
-                    pictureLink: temp
+                    pictureLink: temp,
+                    id: id,
+                    user: this.props.user
                 });
+            })
+
+            fetch(`http://localhost:3001/api/${user}/manga/${id}`)
+            .then((res) => res.json())
+            .then((res) => {
+                if(res[0].status!=null){
+
+                
+                if(res[0].status=="interested"){
+                    this.setState({
+                        interested: true
+                    })                                                                                      
+                }
+                if(res[0].status=="not interested"){
+                    this.setState({
+                        notinterested: true
+                    })                                                                                      
+                }
+                }
+                if(res[0].rating !=null){
+                    if(res[0].rating <4){
+                        this.setState({
+                            dislike: true
+                        }) 
+                    }else if(res[0].rating <8){
+                        this.setState({
+                            neutral: true
+                        }) 
+                    }else if(res[0].rating <=10){
+                        this.setState({
+                            like: true
+                        }) 
+                    }
+                }
             }) 
         }
+        toggleinterestChange = () => {
+            if(this.state.interested){
+                return;
+            }
+                this.setState({
+                    interested: true,
+                    notinterested: false,
+                    dislike: false,
+                    neutral: false,
+                    like: false
+                  });
+                  let interest = 'interested'
+                fetch(`http://localhost:3001/api/${this.state.user}/manga/${this.state.id}/${interest}`,{
+                    method: 'POST',
+                });
 
+          }
+        togglenotinterestChange = () => {
+            if(this.state.notinterested){
+                return;
+            }
+                this.setState({
+                    interested: false,
+                    notinterested: true,
+                    dislike: false,
+                    neutral: false,
+                    like: false
+                  });
+                  let interest = 'not interested'
+                  fetch(`http://localhost:3001/api/${this.state.user}/manga/${this.state.id}/${interest}`,{
+                      method: 'POST',
+                  });
+          }
+          toggledislike = () => {
+            if(this.state.dislike){
+                return;
+            }
+                this.setState({
+                    dislike: true,
+                    neutral: false,
+                    like: false,
+                    interested: false,
+                    notinterested: false
+                  });
+                  let rating = 1
+                  fetch(`http://localhost:3001/api/${this.state.user}/${this.state.id}/${rating}`,{
+                      method: 'POST',
+                  });
+          }
+          toggleneutral = () => {
+            if(this.state.neutral){
+                return;
+            }
+                this.setState({
+                    dislike: false,
+                    neutral: true,
+                    like: false,
+                    interested: false,
+                    notinterested: false
+                  });
+                  let rating = 6
+                  fetch(`http://localhost:3001/api/${this.state.user}/${this.state.id}/${rating}`,{
+                      method: 'POST',
+                  });
+          }
+          togglelike = () => {
+            if(this.state.like){
+                return;
+            }
+                this.setState({
+                    dislike: false,
+                    neutral: false,
+                    like: true,
+                    interested: false,
+                    notinterested: false
+                  });
+                  let rating = 10
+                  fetch(`http://localhost:3001/api/${this.state.user}/${this.state.id}/${rating}`,{
+                      method: 'POST',
+                  });
+          }
     render(){
         const {title, description, 
         releaseDate, chapterCount, status, genre,
@@ -64,6 +186,15 @@ class Manga_Info extends React.Component{
                     <h4 className='infoh4'>Genres: {genre||other}</h4>
                     <h4 className='infoh4'>Themes: {theme||other}</h4>
                     <h4 className='infoh4'>Demographics: {demographic||other}</h4>
+                </div>
+                <div className='infodiv'>
+                    <input type="checkbox" checked = {this.state.interested} onChange={this.toggleinterestChange}/> Interested
+                    <input type="checkbox" checked = {this.state.notinterested} onChange={this.togglenotinterestChange}/> Not Interested
+                </div>
+                <div className='infodiv'>
+                    <input type="checkbox" checked = {this.state.dislike} onChange={this.toggledislike}/> Disliked
+                    <input type="checkbox" checked = {this.state.neutral} onChange={this.toggleneutral}/> Neutral
+                    <input type="checkbox" checked = {this.state.like} onChange={this.togglelike}/> Liked
                 </div>
                 </div>
                 </>
