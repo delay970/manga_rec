@@ -104,6 +104,17 @@ app.post('/api/:userId/:mangaId/:rating', function(req,res) {
   });
 });
 
+app.get('/api/interest/:user', function(req, res) {
+  let sql = 'select manga.* from manga inner join ratings on manga.id = ratings.mangaid where ratings.status = "interested" and ratings.userID = ? order by rand() limit 10'
+  con.query(sql, req.params.user, function (err,result) {
+      if (err) throw err;
+      console.log(result);
+      res.send(result);
+  });
+  // res.send("id is set to " + req.params.id);
+// console.log("Request for manga id: " + req.params.id);
+});
+
   app.listen(PORT, () => 
     console.log(`Server listening on ${PORT}`)
   );
