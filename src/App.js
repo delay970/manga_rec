@@ -4,7 +4,7 @@ import { BrowserRouter as Router, Routes, Route}
 import Manga_Info from './Manga_Info';
 import Homepage from './Homepage';
 
-let user = 2;
+let user = 1;
 
 function setUserID(id){
     user = id

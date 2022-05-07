@@ -72,9 +72,6 @@ class MangaThemeRow extends React.Component{
             <h2 width = 'min-content' className='mangah2'>
                 {this.props.theme}
             </h2>
-            <h4 text-align = 'right'> 
-                <Link to = {link}>View All</Link>
-            </h4>
             </div>
             <div className='rowC'>
             {
@@ -99,7 +96,7 @@ class MangaInterestRow extends React.Component{
         this.state={
             mangas: []
         }
-        fetch(`http://localhost:3001/api/Interest/`)
+        fetch(`http://localhost:3001/api/Interest/${this.props.user}`)
         .then((res) => res.json())
         .then((res) => {
             this.state.mangas = res
@@ -116,11 +113,8 @@ class MangaInterestRow extends React.Component{
         <>
             <div className='rowT'>
             <h2 width = 'min-content' className='mangah2'>
-                {this.props.theme}
+                Interests
             </h2>
-            <h4 text-align = 'right'> 
-                <Link to = {link}>View All</Link>
-            </h4>
             </div>
             <div className='rowC'>
             {
@@ -226,7 +220,8 @@ class Homepage extends React.Component{
 
         return(
             <>
-            <div className='mangadiv' border-style = 'hidden'>
+                <div className='mangadiv' border-style = 'hidden'>
+                <MangaInterestRow user = {this.props.user}/>
                 {genres.map(genre=>{
                     return(
                         <MangaGenreRow key = {genre.id} genre = {genre.name}/>
@@ -237,7 +232,7 @@ class Homepage extends React.Component{
                         <MangaThemeRow key = {theme.id} theme = {theme.name}/>
                     )
                 })}
-            </div>
+            </div> 
             </>
         );
     }
