@@ -4,14 +4,19 @@ import { BrowserRouter as Router, Routes, Route}
 import Manga_Info from './Manga_Info';
 import Homepage from './Homepage';
 
-function App() {
+let user = 2;
 
+function setUserID(id){
+    user = id
+};
+
+function App() {
   return (
   <>
     <Router>
     <Routes>
-        <Route path='/manga/:id' element={<Manga_Info/>} />
-        <Route path='/' element={<Homepage/>} />
+        <Route path='/manga/:id' element={<Manga_Info user = {user}/>}/>
+        <Route path='/' element={<Homepage user = {user}/>} />
     </Routes>
     </Router>
   </>

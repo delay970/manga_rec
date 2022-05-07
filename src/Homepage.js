@@ -6,8 +6,10 @@ class MangaGenreRow extends React.Component{
     constructor(props){
         super(props);
         this.state={
-            mangas: []
+            mangas: [],
+            user: this.props.user
         }
+        console.log(this.state.user);
         fetch(`http://localhost:3001/api/genre/${this.props.genre}`)
         .then((res) => res.json())
         .then((res) => {
@@ -17,7 +19,6 @@ class MangaGenreRow extends React.Component{
             })
         }) 
     }
- 
     render(){
         const {mangas} = this.state
         let link = '/' + this.props.genre
@@ -53,6 +54,52 @@ class MangaThemeRow extends React.Component{
             mangas: []
         }
         fetch(`http://localhost:3001/api/theme/${this.props.theme}`)
+        .then((res) => res.json())
+        .then((res) => {
+            this.state.mangas = res
+            this.setState({
+                mangas: [...this.state.mangas]
+            })
+        }) 
+    }
+ 
+    render(){
+        const {mangas} = this.state
+        let link = '/' + this.props.theme
+        return(
+        <>
+            <div className='rowT'>
+            <h2 width = 'min-content' className='mangah2'>
+                {this.props.theme}
+            </h2>
+            <h4 text-align = 'right'> 
+                <Link to = {link}>View All</Link>
+            </h4>
+            </div>
+            <div className='rowC'>
+            {
+            mangas.map(manga =>{
+                return(
+                    <MiniManga key = {manga.id} title={manga.title||'N/A'} pictureLink={manga.pictureLink} id = {manga.id}/>
+                ) 
+            }) 
+            }
+
+            </div>
+        </>
+
+
+        );
+    }
+}
+
+class MangaInterestRow extends React.Component{
+    constructor(props){
+        super(props);
+        this.state={
+            mangas: []
+        }
+        fetch(`http://localhost:3001/api/Interest/`)
         .then((res) => res.json())
         .then((res) => {
             this.state.mangas = res
